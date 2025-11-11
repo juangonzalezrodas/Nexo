@@ -92,11 +92,9 @@ const ObjectRegistrationForm = ({ onSuccess, onCancel }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-  
         if (!validateForm()) return;
 
         setLoading(true);
-  
         try {
         const objectData = {
         ...formData,
@@ -136,6 +134,49 @@ const ObjectRegistrationForm = ({ onSuccess, onCancel }) => {
     } finally {
     setLoading(false);
     }
+
+    // Después de registrar el objeto exitosamente
+if (result.success) {
+    toast.success('✅ Objeto registrado exitosamente');
+    
+  // NUEVO: Buscar coincidencias automáticas
+    try {
+    const matchResult = await findMatchesForObject({
+        id: result.id,
+        ...formData
+    });
+    
+    if (matchResult.success && matchResult.data.length > 0) {
+        toast.info(`🎯 Se encontraron ${matchResult.data.length} posible(s) coincidencia(s)`);
+
+      // Crear notificaciones para cada coincidencia
+        for (const match of matchResult.data) {
+        await notifyMatch(
+            match.ticket.userId,
+            formData.title,
+            match.ticket.title,
+            match.similarity
+        );
+        
+        // Crear registro de coincidencia
+        await createMatch(
+            result.id,
+            match.ticket.id,
+            match.ticket.userId,
+            match.similarity
+        );
+        
+        // Actualizar estado del ticket
+        await updateTicketStatus(match.ticket.id, 'matched', {
+            matchedObjectId: result.id
+        });
+        }
+    }
+    } catch (error) {
+    console.error('Error al buscar coincidencias:', error);
+    }
+  // Continuar con el resto...
+}
 };
 
     return (
