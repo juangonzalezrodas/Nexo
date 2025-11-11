@@ -113,6 +113,17 @@
     font-size: var(--font-size-sm);
 }
 
+.adminBadge {
+    background-color: var(--secondary-color);
+    color: white;
+    padding: 2px 8px;
+    border-radius: var(--border-radius-sm);
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-left: var(--spacing-xs);
+}
+
 @media (max-width: 768px) {
     .userAvatar {
     width: 30px;

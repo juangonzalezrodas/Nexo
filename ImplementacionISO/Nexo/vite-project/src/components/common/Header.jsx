@@ -1,11 +1,12 @@
 import { useAuth } from '../../hooks/useAuth';
+import { useUserRole } from '../../hooks/useUserRole';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import NotificationList from '../notifications/NotificationList';
 import styles from './Header.module.css';
 
 const Header = () => {
     const { currentUser, logout } = useAuth();
+    const { isAdmin } = useUserRole();
     const navigate = useNavigate();
 
     const handleLogout = async () => {
@@ -34,18 +35,24 @@ const Header = () => {
             <Link to="/my-tickets" className={styles.navLink}>
             Mis Reportes
             </Link>
+
+          {/* SOLO MOSTRAR SI ES ADMIN */}
+            {isAdmin && (
             <Link to="/admin" className={styles.navLink}>
-            Administración
+                Administración
             </Link>
+            )}
         </nav>
 
         <div className={styles.userSection}>
-            <NotificationList />
             <Link to="/profile" className={styles.profileLink}>
             <span className={styles.userAvatar}>
                 {currentUser?.email?.charAt(0).toUpperCase()}
             </span>
             <span className={styles.userEmail}>{currentUser?.email}</span>
+            {isAdmin && (
+                <span className={styles.adminBadge}>Admin</span>
+            )}
             </Link>
             <button onClick={handleLogout} className={styles.logoutBtn}>
             Cerrar Sesión

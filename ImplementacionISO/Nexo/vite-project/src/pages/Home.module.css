@@ -13,11 +13,30 @@
     justify-content: center;
 }
 
+
 .heroTitle {
     font-size: 4rem;
     font-weight: 700;
     margin-bottom: var(--spacing-md);
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.adminButton {
+    padding: var(--spacing-md) var(--spacing-2xl);
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius-md);
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.adminButton:hover {
+    background-color: #ff8533;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
 }
 
 .heroTagline {

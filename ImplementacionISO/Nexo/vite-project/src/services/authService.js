@@ -4,14 +4,19 @@ import { doc, setDoc, getDoc } from 'firebase/firestore';
 export const createUserProfile = async (uid, userData) => {
     try {
     const userRef = doc(db, 'users', uid);
+    
+    // Detectar si es admin por email
+    const isAdmin = userData.email === 'administrador@uao.edu.co';
+    
     await setDoc(userRef, {
         uid,
         email: userData.email,
         name: userData.name,
         idNumber: userData.idNumber,
-        role: userData.role || 'student',
+        role: isAdmin ? 'admin' : (userData.role || 'student'),
         createdAt: new Date()
     });
+    
     return { success: true };
     } catch (error) {
     console.error('Error al crear perfil:', error);

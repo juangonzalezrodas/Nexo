@@ -3,8 +3,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { createUserProfile } from '../../services/authService';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { isValidUAOEmail, isValidIdNumber, isValidPassword, isNotEmpty } from '../../utils/validators';
-import { USER_ROLES } from '../../utils/constants';
+import { isValidEmail, isValidIdNumber, isValidPassword, isNotEmpty } from '../../utils/validators';
 import styles from './RegisterForm.module.css';
 
 const RegisterForm = () => {
@@ -13,8 +12,8 @@ const RegisterForm = () => {
     email: '',
     idNumber: '',
     password: '',
-    confirmPassword: '',
-    role: USER_ROLES.STUDENT
+    confirmPassword: ''
+    // NO incluimos role, se asigna automáticamente
     });
     const [loading, setLoading] = useState(false);
 
@@ -33,8 +32,8 @@ const RegisterForm = () => {
         toast.error('El nombre es requerido');
         return false;
     }
-    if (!isValidUAOEmail(formData.email)) {
-        toast.error('El correo electrónico es inválido, el dominio debe ser @uao.edu.co');
+    if (!isValidEmail(formData.email)) {
+        toast.error('El correo electrónico es inválido');
         return false;
     }
     if (!isValidIdNumber(formData.idNumber)) {
@@ -64,12 +63,12 @@ const RegisterForm = () => {
         const userCredential = await register(formData.email, formData.password);
         console.log('Usuario creado en Auth:', userCredential.user.uid);
 
-      // Crear perfil en Firestore
+      // El rol se asigna automáticamente en authService según el email
         const profileResult = await createUserProfile(userCredential.user.uid, {
         name: formData.name,
         email: formData.email,
-        idNumber: formData.idNumber,
-        role: formData.role
+        idNumber: formData.idNumber
+        // NO enviamos role, se asigna automáticamente
         });
 
         if (profileResult.success) {
@@ -121,6 +120,9 @@ const RegisterForm = () => {
                 placeholder="usuario@correo.com"
                 required
             />
+            <small className={styles.hint}>
+                💡 Usa <strong>administrador@uao.edu.co</strong> para acceso de administrador
+            </small>
             </div>
 
             <div className={styles.formGroup}>
@@ -134,21 +136,6 @@ const RegisterForm = () => {
                 placeholder="1234567890"
                 required
             />
-            </div>
-
-            <div className={styles.formGroup}>
-            <label htmlFor="role">Rol</label>
-            <select
-                id="role"
-                name="role"
-                value={formData.role}
-                onChange={handleChange}
-                required
-            >
-                <option value={USER_ROLES.STUDENT}>Estudiante</option>
-                <option value={USER_ROLES.TEACHER}>Profesor</option>
-                <option value={USER_ROLES.VISITOR}>Visitante</option>
-            </select>
             </div>
 
             <div className={styles.formGroup}>

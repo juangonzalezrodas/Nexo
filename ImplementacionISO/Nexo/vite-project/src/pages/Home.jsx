@@ -1,9 +1,11 @@
 import { useNavigate } from 'react-router-dom';
+import { useUserRole } from '../hooks/useUserRole';
 import Header from '../components/common/Header';
 import styles from './Home.module.css';
 
 const Home = () => {
     const navigate = useNavigate();
+    const { isAdmin } = useUserRole();
 
     return (
     <>
@@ -29,6 +31,16 @@ const Home = () => {
                 >
                 Reportar Pérdida
                 </button>
+
+              {/* MOSTRAR SOLO SI ES ADMIN */}
+                {isAdmin && (
+                <button 
+                    onClick={() => navigate('/admin')} 
+                    className={styles.adminButton}
+                >
+                    Panel Admin
+                </button>
+                )}
             </div>
             </div>
         </div>

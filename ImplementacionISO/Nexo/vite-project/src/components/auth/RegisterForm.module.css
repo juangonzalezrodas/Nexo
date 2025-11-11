@@ -6,6 +6,17 @@
     background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
     padding: var(--spacing-xl) 0;
 }
+.hint {
+    display: block;
+    margin-top: var(--spacing-xs);
+    color: var(--gray-600);
+    font-size: var(--font-size-xs);
+    font-style: italic;
+}
+
+.hint strong {
+    color: var(--secondary-color);
+}
 
 .formCard {
     background: white;
